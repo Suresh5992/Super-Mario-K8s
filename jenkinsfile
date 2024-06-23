@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        action = 'apply' // Change to 'destroy' as needed
+    }
     stages {
         stage('Checkout from Git') {
             steps {
@@ -7,17 +10,16 @@ pipeline {
             }
         }
         stage('Docker Build & Push') {
-    steps {
-        script {
-            withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
-                sh 'docker build -t mario .'
-                sh 'docker tag mario suresh628/mario:latest'
-                sh 'docker push suresh628/mario:latest'
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                        sh 'docker build -t mario .'
+                        sh 'docker tag mario suresh628/mario:latest'
+                        sh 'docker push suresh628/mario:latest'
+                    }
+                }
             }
         }
-    }
-}
-
         stage('Terraform version') {
             steps {
                 sh 'terraform --version'
@@ -53,8 +55,5 @@ pipeline {
                 }
             }
         }
-    }
-    environment {
-        action = 'apply' // Change to 'destroy' as needed
     }
 }
