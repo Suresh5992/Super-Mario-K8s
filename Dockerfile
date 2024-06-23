@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 80
 
 # Command to run your application
-CMD ["node", "app.js"]  # Replace with the actual command to start your application
+CMD ["npm", "start"]  # Replace with the actual command to start your application
