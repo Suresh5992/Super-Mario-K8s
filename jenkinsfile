@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/vijaygiduthuri/Super-Mario-K8s.git'
+                git branch: 'main', url: 'https://github.com/Suresh5992/Super-Mario-K8s.git'
             }
         }
         stage('Build Docker Image') {
