@@ -9,8 +9,11 @@ pipeline{
 stage('Build Docker Image') {
             steps {
                 script {   
+      withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){ 
                     // Build the Docker image and push it to Docker Hub
-                    docker.build('suresh628/mario:latest').push('latest')
+                     sh "docker tag bingo suresh628/mario:latest "
+                       sh "docker push suresh628bingo:latest "
+
                 }
             }
         }
