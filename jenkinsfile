@@ -12,7 +12,8 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 script {
-                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'docker login -u $DOCKER_USER -p $DOCKER_PASSWORD'
                         sh 'docker build -t mario .'
                         sh 'docker tag mario suresh628/mario:latest'
                         sh 'docker push suresh628/mario:latest'
