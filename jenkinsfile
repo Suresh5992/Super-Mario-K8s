@@ -8,9 +8,9 @@ pipeline{
         }
 stage('Build Docker Image') {
             steps {
-                script {
+                script {   
                     // Build the Docker image and push it to Docker Hub
-                    docker.build('suresh628/bingo1:latest').push('latest')
+                    docker.build('suresh628/mario:latest').push('latest')
                 }
             }
         }
