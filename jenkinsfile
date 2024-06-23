@@ -1,55 +1,60 @@
-pipeline{
+pipeline {
     agent any
     stages {
-        stage('Checkout from Git'){
-            steps{
+        stage('Checkout from Git') {
+            steps {
                 git branch: 'main', url: 'https://github.com/vijaygiduthuri/Super-Mario-K8s.git'
             }
         }
-stage('Build Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {   
-      withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){ 
-                    // Build the Docker image and push it to Docker Hub
-                     sh "docker tag bingo suresh628/mario:latest "
-                       sh "docker push suresh628bingo:latest "
-
+                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') { 
+                        // Build the Docker image and push it to Docker Hub
+                        sh "docker build -t suresh628/mario:latest ."
+                        sh "docker push suresh628/mario:latest"
+                    }
                 }
             }
         }
-
-        stage('Terraform version'){
-             steps{
-                 sh 'terraform --version'
-             }
+        stage('Terraform version') {
+            steps {
+                sh 'terraform --version'
+            }
         }
-        stage('Terraform init'){
-             steps{
-                 dir('EKS-TF') {
-                      sh 'terraform init'
-                   }
-             }
+        stage('Terraform init') {
+            steps {
+                dir('EKS-TF') {
+                    sh 'terraform init'
+                }
+            }
         }
-        stage('Terraform validate'){
-             steps{
-                 dir('EKS-TF') {
-                      sh 'terraform validate'
-                   }
-             }
+        stage('Terraform validate') {
+            steps {
+                dir('EKS-TF') {
+                    sh 'terraform validate'
+                }
+            }
         }
-        stage('Terraform plan'){
-             steps{
-                 dir('EKS-TF') {
-                      sh 'terraform plan'
-                   }
-             }
+        stage('Terraform plan') {
+            steps {
+                dir('EKS-TF') {
+                    sh 'terraform plan'
+                }
+            }
         }
-        stage('Terraform apply/destroy'){
-             steps{
-                 dir('EKS-TF') {
-                      sh 'terraform ${action} --auto-approve'
-                   }
-             }
+        stage('Terraform apply/destroy') {
+            steps {
+                dir('EKS-TF') {
+                    script {
+                        sh "terraform ${action} --auto-approve"
+                    }
+                }
+            }
         }
     }
+    environment {
+        action = 'apply' // or 'destroy'
+    }
 }
+
