@@ -6,6 +6,15 @@ pipeline{
                 git branch: 'main', url: 'https://github.com/vijaygiduthuri/Super-Mario-K8s.git'
             }
         }
+stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image and push it to Docker Hub
+                    docker.build('suresh628/bingo1:latest').push('latest')
+                }
+            }
+        }
+
         stage('Terraform version'){
              steps{
                  sh 'terraform --version'
