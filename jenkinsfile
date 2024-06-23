@@ -6,22 +6,18 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/Suresh5992/Super-Mario-K8s.git'
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Login to Docker Hub
-                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_TOKEN')]) {
-                        sh 'echo "$DOCKERHUB_TOKEN" | docker login -u suresh628 --password-stdin'
-                    }
-                    
-                    // Build the Docker image
-                    sh 'docker build -t suresh628/mario:latest .'
-                    
-                    // Push the Docker image
-                    sh 'docker push suresh628/mario:latest'
-                }
+        stage('Docker Build & Push') {
+    steps {
+        script {
+            withDockerRegistry(credentialsId: 'docker', toolName: 'docker') {
+                sh 'docker build -t mario .'
+                sh 'docker tag mario suresh628/mario:latest'
+                sh 'docker push suresh628/mario:latest'
             }
         }
+    }
+}
+
         stage('Terraform version') {
             steps {
                 sh 'terraform --version'
