@@ -8,12 +8,17 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                script {   
-                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker') { 
-                        // Build the Docker image and push it to Docker Hub
-                        sh "docker build -t suresh628/mario:latest ."
-                        sh "docker push suresh628/mario:latest"
+                script {
+                    // Login to Docker Hub
+                    withCredentials([string(credentialsId: 'dockerhub-credentials', variable: 'DOCKERHUB_TOKEN')]) {
+                        sh 'echo "$DOCKERHUB_TOKEN" | docker login -u suresh628 --password-stdin'
                     }
+                    
+                    // Build the Docker image
+                    sh 'docker build -t suresh628/mario:latest .'
+                    
+                    // Push the Docker image
+                    sh 'docker push suresh628/mario:latest'
                 }
             }
         }
@@ -54,7 +59,6 @@ pipeline {
         }
     }
     environment {
-        action = 'apply' // or 'destroy'
+        action = 'apply' // Change to 'destroy' as needed
     }
 }
-
